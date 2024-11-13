@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <title>成績輸入</title>
+</head>
+<body>
+    <h2>輸入成績</h2>
+    <form id="scoreForm">
+        <label for="score">成績：</label>
+        <input type="text" id="score" required>
+        <button type="submit">送出</button>
+    </form>
+
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+        import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyC3jkt1DAV_B3k_U-Xkz0MhKASWeLgoO9g",
+            authDomain: "webprogramming-7ee71.firebaseapp.com",
+            projectId: "webprogramming-7ee71",
+            storageBucket: "webprogramming-7ee71.appspot.com",
+            messagingSenderId: "882784734922",
+            appId: "1:882784734922:web:0c87a8a9b3cdce95c8ae33",
+            databaseURL: "https://webprogramming-7ee71-default-rtdb.asia-southeast1.firebasedatabase.app"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const database = getDatabase(app);
+
+        // Form submit event listener to save the score to Firebase
+        document.getElementById('scoreForm').addEventListener('submit', function(e) {
+            e.preventDefault(); // Prevent page refresh
+
+            const score = document.getElementById('score').value;
+            if (score !== "") {
+                // Write the score to Firebase Realtime Database
+                push(ref(database, 'scores'), {
+                    score: score,
+                    timestamp: Date.now()
+                }).then(() => {
+                    alert("成績已儲存！");
+                    document.getElementById('score').value = ""; // Clear the input field
+                }).catch((error) => {
+                    console.error("儲存失敗：", error);
+                });
+            } else {
+                alert("請輸入成績！");
+            }
+        });
+    </script>
+</body>
+</html>
